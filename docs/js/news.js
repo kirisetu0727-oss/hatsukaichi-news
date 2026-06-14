@@ -11,6 +11,7 @@ let allArticles = [];
 let filteredArticles = [];
 let currentCategory = 'all';
 let currentSort = 'importance';
+let currentDateRange = -1; // -1=全期間, 0=今日, 1=昨日, 7=1週間, 30=1ヶ月
 
 const DATA_URL = 'data/articles.json';
 
@@ -55,6 +56,28 @@ export function applyFilters(searchQuery = '') {
   if (currentCategory !== 'all') {
     result = result.filter(a => a.category === currentCategory);
   }
+
+  if (currentDateRange >= 0) {
+    const now = new Date();
+    if (currentDateRange === 0) {
+      // 今日
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      result = result.filter(a => new Date(a.published_at || 0) >= todayStart);
+    } else if (currentDateRange === 1) {
+      // 昨日
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const yesterdayStart = new Date(todayStart - 86400000);
+      result = result.filter(a => {
+        const d = new Date(a.published_at || 0);
+        return d >= yesterdayStart && d < todayStart;
+      });
+    } else {
+      // N日間
+      const cutoff = new Date(now - currentDateRange * 86400000);
+      result = result.filter(a => new Date(a.published_at || 0) >= cutoff);
+    }
+  }
+
   if (currentSearch) {
     const q = currentSearch.toLowerCase();
     result = result.filter(a =>
@@ -68,7 +91,11 @@ export function applyFilters(searchQuery = '') {
   }
 
   if (currentSort === 'importance') {
-    result = [...result].sort((a, b) => (b.importance_score || 0) - (a.importance_score || 0));
+    result = [...result].sort((a, b) => {
+      const scoreDiff = (b.importance_score || 0) - (a.importance_score || 0);
+      if (scoreDiff !== 0) return scoreDiff;
+      return new Date(b.published_at || 0) - new Date(a.published_at || 0);
+    });
   } else {
     result = [...result].sort((a, b) =>
       new Date(b.published_at || 0) - new Date(a.published_at || 0)
@@ -234,6 +261,29 @@ export function initFilters() {
     document.getElementById('sort-importance').classList.remove('active');
     applyFilters();
   });
+
+  const dateBar = document.getElementById('date-filter-chips');
+  if (dateBar) {
+    const dateOptions = [
+      { label: '全期間', value: -1 },
+      { label: '今日', value: 0 },
+      { label: '昨日', value: 1 },
+      { label: '1週間', value: 7 },
+      { label: '1ヶ月', value: 30 },
+    ];
+    dateBar.innerHTML = dateOptions.map((opt, i) =>
+      `<button class="date-chip${i === 0 ? ' active' : ''}" data-range="${opt.value}">${opt.label}</button>`
+    ).join('');
+
+    dateBar.addEventListener('click', e => {
+      const chip = e.target.closest('.date-chip');
+      if (!chip) return;
+      dateBar.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentDateRange = Number(chip.dataset.range);
+      applyFilters();
+    });
+  }
 }
 
 // ===== Escape helpers =====
