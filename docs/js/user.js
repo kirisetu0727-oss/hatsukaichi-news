@@ -44,14 +44,12 @@ export function renderUserScreen() {
 
     <div class="user-grid" id="user-grid">
       ${users.map(u => `
-        <button class="user-card" data-user-id="${u.id}">
+        <div class="user-card" data-user-id="${u.id}" role="button" tabindex="0">
           <div class="user-avatar" style="background:${getAvatarColor(u.name)}">${[...u.name][0]}</div>
           <div class="user-name">${escHtml(u.name)}</div>
           <div class="user-last-seen">${formatLastSeen(u.lastSeen)}</div>
-          <button class="user-delete-btn" data-delete-id="${u.id}" aria-label="削除">
-            ${ICONS.trash}
-          </button>
-        </button>`).join('')}
+          <button class="user-delete-btn" data-delete-id="${u.id}">削除</button>
+        </div>`).join('')}
     </div>
 
     <button class="add-user-btn" id="add-user-btn">
@@ -61,8 +59,13 @@ export function renderUserScreen() {
   container.querySelectorAll('.user-card').forEach(card => {
     card.addEventListener('click', e => {
       if (e.target.closest('.user-delete-btn')) return;
-      const userId = card.dataset.userId;
-      selectUser(userId);
+      selectUser(card.dataset.userId);
+    });
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectUser(card.dataset.userId);
+      }
     });
   });
 

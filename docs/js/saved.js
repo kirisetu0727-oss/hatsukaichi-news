@@ -3,7 +3,7 @@
  */
 import {
   formatRelativeTime, getImportanceClass,
-  ICONS, showToast, categoryEmoji
+  ICONS, showToast
 } from './app.js';
 import {
   getUsers, getCurrentUserId, setCurrentUser,

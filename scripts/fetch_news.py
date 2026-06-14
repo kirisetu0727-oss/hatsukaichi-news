@@ -208,7 +208,6 @@ def analyze_with_gemini(model, article: dict) -> dict:
   "importance_score": 0から100の整数,
   "importance_level": "高または中または低",
   "importance_reason": "重要と判断した理由（1文・30字以内）",
-  "category": "補助金、企業、店舗、雇用、観光、イベント、行政、その他のいずれか",
   "related_areas": ["関係する地域名のリスト"],
   "related_entities": ["関係する企業・団体・店舗名のリスト"],
   "business_checkpoints": "業務上の確認ポイント（1文）"
@@ -231,7 +230,6 @@ def analyze_with_gemini(model, article: dict) -> dict:
         "importance_score": 30,
         "importance_level": "低",
         "importance_reason": "自動分析失敗のためデフォルト値",
-        "category": "その他",
         "related_areas": [],
         "related_entities": [],
         "business_checkpoints": "元記事を直接確認してください",

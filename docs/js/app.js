@@ -143,13 +143,3 @@ export function renderEmpty(container, { title, message, retryFn }) {
   if (retryFn) container.querySelector('.retry-btn').addEventListener('click', retryFn);
 }
 
-// ===== Category emoji =====
-
-export function categoryEmoji(cat) {
-  const map = {
-    '補助金': '💰', '企業': '🏢', '店舗': '🏪', '雇用': '👥',
-    '観光': '⛩️', 'イベント': '🎉', '行政': '🏛️', 'その他': '📰',
-    '出店': '🏪', '閉店': '🚪'
-  };
-  return map[cat] || '📰';
-}

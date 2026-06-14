@@ -3,15 +3,16 @@
  */
 import {
   formatRelativeTime, formatDate, getImportanceClass,
-  ICONS, showToast, renderSkeletons, renderEmpty, categoryEmoji
+  ICONS, showToast, renderSkeletons, renderEmpty
 } from './app.js';
 import { getCurrentUserId, isArticleSaved, saveArticle, unsaveArticle } from './storage.js';
 
 let allArticles = [];
 let filteredArticles = [];
-let currentCategory = 'all';
 let currentSort = 'importance';
-let currentDateRange = -1; // -1=全期間, 0=今日, 1=昨日, 7=1週間, 30=1ヶ月
+let currentDateRange = -1; // -1=全期間, 0=今日, 1=昨日, 7=1週間, 'custom'=期間指定
+let customFrom = null; // Date | null
+let customTo = null;   // Date | null
 
 const DATA_URL = 'data/articles.json';
 
@@ -53,18 +54,19 @@ export function applyFilters(searchQuery = '') {
   currentSearch = searchQuery;
   let result = allArticles;
 
-  if (currentCategory !== 'all') {
-    result = result.filter(a => a.category === currentCategory);
-  }
-
-  if (currentDateRange >= 0) {
+  if (currentDateRange === 'custom') {
+    result = result.filter(a => {
+      const d = new Date(a.published_at || 0);
+      if (customFrom && d < customFrom) return false;
+      if (customTo && d > customTo) return false;
+      return true;
+    });
+  } else if (currentDateRange >= 0) {
     const now = new Date();
     if (currentDateRange === 0) {
-      // 今日
       const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       result = result.filter(a => new Date(a.published_at || 0) >= todayStart);
     } else if (currentDateRange === 1) {
-      // 昨日
       const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const yesterdayStart = new Date(todayStart - 86400000);
       result = result.filter(a => {
@@ -72,7 +74,6 @@ export function applyFilters(searchQuery = '') {
         return d >= yesterdayStart && d < todayStart;
       });
     } else {
-      // N日間
       const cutoff = new Date(now - currentDateRange * 86400000);
       result = result.filter(a => new Date(a.published_at || 0) >= cutoff);
     }
@@ -141,7 +142,6 @@ function renderCard(article) {
             <span class="badge-dot"></span>
             重要度：${article.importance_level || '低'}
           </span>
-          ${article.category ? `<span class="category-chip">${categoryEmoji(article.category)} ${article.category}</span>` : ''}
         </div>
         <h2 class="card-title">${escHtml(article.title || '')}</h2>
         <p class="card-summary">${escHtml(article.summary_short || '')}</p>
@@ -227,27 +227,9 @@ function attachCardEvents(container) {
   });
 }
 
-// ===== Category chips =====
+// ===== Filters =====
 
 export function initFilters() {
-  const categories = ['すべて', '補助金', '企業', '店舗', '雇用', '観光', 'イベント', '行政', 'その他'];
-  const bar = document.getElementById('category-chips');
-  if (!bar) return;
-
-  bar.innerHTML = categories.map((cat, i) => {
-    const val = i === 0 ? 'all' : cat;
-    return `<button class="chip${i === 0 ? ' active' : ''}" data-cat="${val}">${cat}</button>`;
-  }).join('');
-
-  bar.addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    bar.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    currentCategory = chip.dataset.cat;
-    applyFilters();
-  });
-
   document.getElementById('sort-importance')?.addEventListener('click', () => {
     currentSort = 'importance';
     document.getElementById('sort-importance').classList.add('active');
@@ -263,27 +245,53 @@ export function initFilters() {
   });
 
   const dateBar = document.getElementById('date-filter-chips');
-  if (dateBar) {
-    const dateOptions = [
-      { label: '全期間', value: -1 },
-      { label: '今日', value: 0 },
-      { label: '昨日', value: 1 },
-      { label: '1週間', value: 7 },
-      { label: '1ヶ月', value: 30 },
-    ];
-    dateBar.innerHTML = dateOptions.map((opt, i) =>
-      `<button class="date-chip${i === 0 ? ' active' : ''}" data-range="${opt.value}">${opt.label}</button>`
-    ).join('');
+  const rangePanel = document.getElementById('date-range-panel');
+  if (!dateBar) return;
 
-    dateBar.addEventListener('click', e => {
-      const chip = e.target.closest('.date-chip');
-      if (!chip) return;
-      dateBar.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      currentDateRange = Number(chip.dataset.range);
+  const dateOptions = [
+    { label: '全期間', value: -1 },
+    { label: '今日',   value: 0 },
+    { label: '昨日',   value: 1 },
+    { label: '1週間',  value: 7 },
+    { label: '期間指定', value: 'custom' },
+  ];
+  dateBar.innerHTML = dateOptions.map((opt, i) =>
+    `<button class="date-chip${i === 0 ? ' active' : ''}" data-range="${opt.value}">${opt.label}</button>`
+  ).join('');
+
+  dateBar.addEventListener('click', e => {
+    const chip = e.target.closest('.date-chip');
+    if (!chip) return;
+    dateBar.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const val = chip.dataset.range;
+    if (val === 'custom') {
+      currentDateRange = 'custom';
+      if (rangePanel) rangePanel.style.display = 'flex';
+    } else {
+      currentDateRange = Number(val);
+      customFrom = null;
+      customTo = null;
+      if (rangePanel) rangePanel.style.display = 'none';
       applyFilters();
-    });
-  }
+    }
+  });
+
+  document.getElementById('date-range-apply')?.addEventListener('click', () => {
+    const fromVal = document.getElementById('date-from')?.value;
+    const toVal   = document.getElementById('date-to')?.value;
+    // ローカルタイムでパース（new Date('YYYY-MM-DD') はUTC扱いになるためパーツ分解）
+    customFrom = fromVal ? parseLocalDate(fromVal, false) : null;
+    customTo   = toVal   ? parseLocalDate(toVal,   true)  : null;
+    applyFilters();
+  });
+}
+
+function parseLocalDate(str, endOfDay) {
+  const [y, m, d] = str.split('-').map(Number);
+  return endOfDay
+    ? new Date(y, m - 1, d, 23, 59, 59, 999)
+    : new Date(y, m - 1, d, 0, 0, 0, 0);
 }
 
 // ===== Escape helpers =====

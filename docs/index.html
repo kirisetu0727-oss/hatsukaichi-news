@@ -39,12 +39,15 @@
 
       <!-- ニュース一覧 -->
       <section id="news-page" class="page active">
-        <div class="filter-bar">
-          <div class="filter-chips" id="category-chips"></div>
-        </div>
         <div class="date-filter-bar">
           <span class="date-filter-label">📅 日付</span>
           <div class="date-filter-chips" id="date-filter-chips"></div>
+        </div>
+        <div class="date-range-panel" id="date-range-panel" style="display:none">
+          <input type="date" id="date-from" class="date-range-input">
+          <span class="date-range-sep">〜</span>
+          <input type="date" id="date-to" class="date-range-input">
+          <button class="date-range-apply" id="date-range-apply">適用</button>
         </div>
         <div class="sort-bar">
           <button class="sort-btn active" id="sort-importance">重要度順</button>

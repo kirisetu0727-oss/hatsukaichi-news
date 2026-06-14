@@ -3,7 +3,7 @@
  */
 import {
   formatDate, formatRelativeTime, getImportanceClass,
-  ICONS, showToast, categoryEmoji
+  ICONS, showToast
 } from './app.js';
 import { getCurrentUserId, isArticleSaved, saveArticle, unsaveArticle } from './storage.js';
 import { allArticles } from './news.js';
@@ -49,7 +49,6 @@ export function renderDetail(articleId) {
             <span class="badge-dot"></span>
             重要度：${escHtml(article.importance_level || '低')}
           </span>
-          ${article.category ? `<span class="category-chip">${categoryEmoji(article.category)} ${article.category}</span>` : ''}
         </div>
         ${article.importance_reason ? `<div class="detail-reason-box">「${escHtml(article.importance_reason)}」</div>` : ''}
 
