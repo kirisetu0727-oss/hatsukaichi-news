@@ -92,7 +92,12 @@ document.addEventListener('navigate', async e => {
     const { renderDetail } = await import('./article.js');
     renderDetail(id);
   } else if (page === 'news') {
-    navigateTo('news');
+    const mainApp = document.getElementById('main-app');
+    if (!mainApp || mainApp.style.display === 'none') {
+      showMainApp(getCurrentUserId());
+    } else {
+      navigateTo('news');
+    }
   }
 });
 

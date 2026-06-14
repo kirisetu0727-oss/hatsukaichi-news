@@ -7,8 +7,8 @@ function escHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-const SOURCES_URL = '../scripts/sources.json';
-const KEYWORDS_URL = '../scripts/keywords.json';
+const SOURCES_URL = 'data/sources.json';
+const KEYWORDS_URL = 'data/keywords.json';
 
 export async function initAdminPage() {
   const container = document.getElementById('admin-content');

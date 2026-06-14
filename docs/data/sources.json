@@ -1,0 +1,78 @@
+{
+  "rss_feeds": [
+    {
+      "id": "google_hatsukaichi",
+      "name": "Google ニュース（廿日市市）",
+      "url": "https://news.google.com/rss/search?q=%E5%BB%BF%E6%97%A5%E5%B8%82%E5%B8%82&hl=ja&gl=JP&ceid=JP:ja",
+      "reliability": "中",
+      "enabled": true
+    },
+    {
+      "id": "google_miyajima",
+      "name": "Google ニュース（宮島）",
+      "url": "https://news.google.com/rss/search?q=%E5%AE%AE%E5%B3%B6+%E5%BA%83%E5%B3%B6&hl=ja&gl=JP&ceid=JP:ja",
+      "reliability": "中",
+      "enabled": true
+    },
+    {
+      "id": "google_itsukushima",
+      "name": "Google ニュース（厳島）",
+      "url": "https://news.google.com/rss/search?q=%E5%8E%B3%E5%B3%B6&hl=ja&gl=JP&ceid=JP:ja",
+      "reliability": "中",
+      "enabled": true
+    },
+    {
+      "id": "nhk_hiroshima",
+      "name": "NHK 広島",
+      "url": "https://www3.nhk.or.jp/hiroshima/lnews/rss/4.xml",
+      "reliability": "高",
+      "enabled": true
+    },
+    {
+      "id": "prtimes_hiroshima",
+      "name": "PR TIMES（広島県）",
+      "url": "https://prtimes.jp/rss/new/regionId/13/all/index.rdf",
+      "reliability": "中",
+      "enabled": true
+    },
+    {
+      "id": "atpress",
+      "name": "@Press",
+      "url": "https://www.atpress.ne.jp/rss/releases.rss",
+      "reliability": "中",
+      "enabled": true
+    },
+    {
+      "id": "google_hatsukaichi_company",
+      "name": "Google ニュース（廿日市市 企業）",
+      "url": "https://news.google.com/rss/search?q=%E5%BB%BF%E6%97%A5%E5%B8%82%E5%B8%82+%E4%BC%81%E6%A5%AD&hl=ja&gl=JP&ceid=JP:ja",
+      "reliability": "中",
+      "enabled": true
+    },
+    {
+      "id": "google_miyajima_tourism",
+      "name": "Google ニュース（宮島 観光）",
+      "url": "https://news.google.com/rss/search?q=%E5%AE%AE%E5%B3%B6+%E8%A6%B3%E5%85%89&hl=ja&gl=JP&ceid=JP:ja",
+      "reliability": "中",
+      "enabled": true
+    }
+  ],
+  "scrape_sites": [
+    {
+      "id": "hatsukaichi_city",
+      "name": "廿日市市役所",
+      "url": "https://www.city.hatsukaichi.hiroshima.jp/site/pressrelease/",
+      "reliability": "高",
+      "enabled": true,
+      "type": "scrape"
+    },
+    {
+      "id": "hatsukaichi_cci",
+      "name": "廿日市商工会議所",
+      "url": "https://www.hatsukaichi-cci.or.jp/news/",
+      "reliability": "高",
+      "enabled": true,
+      "type": "scrape"
+    }
+  ]
+}

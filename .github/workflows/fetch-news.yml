@@ -36,7 +36,7 @@ jobs:
         run: |
           git config user.name  "hatsukaichi-news-bot"
           git config user.email "bot@hatsukaichi-news.local"
-          git add data/articles.json data/.processed_ids.json 2>/dev/null || true
+          git add docs/data/articles.json docs/data/.processed_ids.json 2>/dev/null || true
           git diff --staged --quiet || \
             git commit -m "chore: update articles $(date '+%Y-%m-%d %H:%M JST')"
           git push

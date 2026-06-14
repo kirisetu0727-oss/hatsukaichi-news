@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 JST = timezone(timedelta(hours=9))
 SCRIPT_DIR = Path(__file__).parent
-DATA_DIR = SCRIPT_DIR.parent / "data"
+DATA_DIR = SCRIPT_DIR.parent / "docs" / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
 ARTICLES_PATH = DATA_DIR / "articles.json"

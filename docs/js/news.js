@@ -12,7 +12,7 @@ let filteredArticles = [];
 let currentCategory = 'all';
 let currentSort = 'importance';
 
-const DATA_URL = '../data/articles.json';
+const DATA_URL = 'data/articles.json';
 
 // ===== Fetch =====
 
