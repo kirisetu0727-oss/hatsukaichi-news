@@ -43,12 +43,24 @@ function renderAdmin(container, sources, keywords) {
       <div class="admin-section-title">手動更新</div>
       <div style="background:var(--color-surface);border-radius:var(--radius-md);padding:14px;box-shadow:var(--shadow-card)">
         <p style="font-size:var(--text-sm);color:var(--color-text-secondary);margin-bottom:12px">
-          GitHub Actionsを手動でトリガーしてニュースを今すぐ更新します。<br>
-          <small style="color:var(--color-text-muted)">※ GitHubのPersonal Access Tokenが必要です</small>
+          GitHub Actionsを手動でトリガーしてニュースを今すぐ更新します。
         </p>
+        <div style="margin-bottom:10px">
+          <label style="font-size:var(--text-xs);color:var(--color-text-muted);display:block;margin-bottom:4px">
+            GitHub Personal Access Token（workflow スコープ）
+          </label>
+          <input type="password" id="gh-pat-input" placeholder="ghp_xxxxxxxxxxxx"
+            style="width:100%;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);
+                   padding:6px 10px;font-size:var(--text-sm);font-family:inherit;
+                   color:var(--color-text-primary);background:var(--color-bg);box-sizing:border-box">
+          <small style="font-size:10px;color:var(--color-text-muted)">
+            ※ このデバイスのみに保存されます。GitHub → Settings → Developer settings → Personal access tokens → workflow スコープで発行してください。
+          </small>
+        </div>
         <button class="admin-action-btn" id="manual-update-btn">
           ${ICONS.refresh} 今すぐ更新する
         </button>
+        <div id="update-status" style="margin-top:8px;font-size:var(--text-xs);color:var(--color-text-muted)"></div>
       </div>
     </div>
 
@@ -114,7 +126,57 @@ function renderAdmin(container, sources, keywords) {
       </div>
     </div>`;
 
-  document.getElementById('manual-update-btn')?.addEventListener('click', () => {
-    showToast('手動更新はGitHub ActionsのWorkflow dispatchから実行してください');
+  const patInput = document.getElementById('gh-pat-input');
+  const statusEl = document.getElementById('update-status');
+
+  const savedPat = localStorage.getItem('gh_pat') || '';
+  if (patInput) patInput.value = savedPat;
+
+  document.getElementById('manual-update-btn')?.addEventListener('click', async () => {
+    const pat = patInput?.value.trim();
+    if (!pat) {
+      showToast('GitHub Personal Access Tokenを入力してください');
+      return;
+    }
+    localStorage.setItem('gh_pat', pat);
+
+    const btn = document.getElementById('manual-update-btn');
+    btn.disabled = true;
+    if (statusEl) statusEl.textContent = '起動中…';
+
+    try {
+      const res = await fetch(
+        'https://api.github.com/repos/kirisetu0727-oss/hatsukaichi-news/actions/workflows/fetch-news.yml/dispatches',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${pat}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+          body: JSON.stringify({ ref: 'main' }),
+        }
+      );
+
+      if (res.status === 204) {
+        showToast('更新を開始しました（数分後に反映されます）');
+        if (statusEl) statusEl.textContent = '✅ GitHub Actionsが起動しました。数分後にページを再読み込みしてください。';
+      } else if (res.status === 401) {
+        showToast('認証エラー：Tokenを確認してください');
+        if (statusEl) statusEl.textContent = '❌ 認証エラー（401）：Tokenが無効です。';
+      } else if (res.status === 403) {
+        showToast('権限エラー：workflow スコープが必要です');
+        if (statusEl) statusEl.textContent = '❌ 権限エラー（403）：TokenにworkflowスコープをつけてTokenを再発行してください。';
+      } else {
+        showToast(`エラー: ${res.status}`);
+        if (statusEl) statusEl.textContent = `❌ エラー（${res.status}）`;
+      }
+    } catch {
+      showToast('ネットワークエラー');
+      if (statusEl) statusEl.textContent = '❌ ネットワークエラー：接続を確認してください。';
+    } finally {
+      btn.disabled = false;
+    }
   });
 }
