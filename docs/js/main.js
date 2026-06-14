@@ -48,6 +48,7 @@ function showMainApp(userId) {
   initFilters();
   loadArticles();
   setupNav();
+  setupReload();
   setupSearch();
 }
 
@@ -121,6 +122,20 @@ function updateHeaderUser() {
 document.getElementById('user-switch-btn')?.addEventListener('click', () => {
   showUserScreen();
 });
+
+// ===== Reload =====
+
+function setupReload() {
+  const btn = document.getElementById('reload-btn');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    btn.style.opacity = '0.4';
+    btn.disabled = true;
+    await loadArticles();
+    btn.style.opacity = '';
+    btn.disabled = false;
+  });
+}
 
 // ===== Search =====
 
