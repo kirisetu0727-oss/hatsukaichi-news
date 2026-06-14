@@ -129,11 +129,12 @@ function setupReload() {
   const btn = document.getElementById('reload-btn');
   if (!btn) return;
   btn.addEventListener('click', async () => {
-    btn.style.opacity = '0.4';
     btn.disabled = true;
+    btn.classList.add('spinning');
     await loadArticles();
-    btn.style.opacity = '';
+    btn.classList.remove('spinning');
     btn.disabled = false;
+    showToast('最新の記事を読み込みました');
   });
 }
 
