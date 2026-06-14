@@ -229,7 +229,7 @@ def analyze_with_gemini(model, article: dict) -> dict:
         "summary_detail": article.get("raw_summary", "")[:300] or article["title"],
         "importance_score": 30,
         "importance_level": "低",
-        "importance_reason": "自動分析失敗のためデフォルト値",
+        "importance_reason": "",
         "related_areas": [],
         "related_entities": [],
         "business_checkpoints": "元記事を直接確認してください",

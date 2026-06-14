@@ -50,7 +50,8 @@ export function renderDetail(articleId) {
             重要度：${formatScore(article.importance_score)}
           </span>
         </div>
-        ${article.importance_reason ? `<div class="detail-reason-box">「${escHtml(article.importance_reason)}」</div>` : ''}
+        ${article.importance_reason && article.importance_reason !== '自動分析失敗のためデフォルト値'
+          ? `<div class="detail-reason-box">「${escHtml(article.importance_reason)}」</div>` : ''}
 
         <h1 class="detail-title">${escHtml(article.title || '')}</h1>
         <div class="detail-source-line">

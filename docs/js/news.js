@@ -150,7 +150,8 @@ function renderCard(article) {
           <span class="card-meta-dot">·</span>
           <span>${formatRelativeTime(article.published_at)}</span>
         </div>
-        ${article.importance_reason ? `<div class="card-reason">「${escHtml(article.importance_reason)}」</div>` : ''}
+        ${article.importance_reason && article.importance_reason !== '自動分析失敗のためデフォルト値'
+          ? `<div class="card-reason">「${escHtml(article.importance_reason)}」</div>` : ''}
         <div class="card-footer">
           <button class="save-btn${saved ? ' saved' : ''}" data-article-id="${article.id}" aria-label="${saved ? '保存解除' : '保存'}">
             ${saved ? ICONS.bookmarkFill : ICONS.bookmark}
