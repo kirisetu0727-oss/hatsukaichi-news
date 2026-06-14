@@ -2,7 +2,7 @@
  * ニュース一覧ロジック
  */
 import {
-  formatRelativeTime, formatDate, getImportanceClass,
+  formatRelativeTime, formatDate, getImportanceClassByScore, formatScore,
   ICONS, showToast, renderSkeletons, renderEmpty
 } from './app.js';
 import { getCurrentUserId, isArticleSaved, saveArticle, unsaveArticle } from './storage.js';
@@ -127,7 +127,7 @@ function renderArticleList() {
 // ===== Card =====
 
 function renderCard(article) {
-  const cls = getImportanceClass(article.importance_level);
+  const cls = getImportanceClassByScore(article.importance_score);
   const userId = getCurrentUserId();
   const saved = userId ? isArticleSaved(userId, article.id) : false;
   const isHigh = article.importance_score >= 60;
@@ -140,7 +140,7 @@ function renderCard(article) {
         <div class="card-importance">
           <span class="badge badge-${cls}">
             <span class="badge-dot"></span>
-            重要度：${article.importance_level || '低'}
+            重要度：${formatScore(article.importance_score)}
           </span>
         </div>
         <h2 class="card-title">${escHtml(article.title || '')}</h2>
@@ -166,7 +166,7 @@ function renderCard(article) {
         <div class="card-compact-title">${escHtml(article.title || '')}</div>
         <div class="card-compact-meta">
           <span class="badge badge-${cls}" style="padding:1px 7px;font-size:10px">
-            <span class="badge-dot"></span>${article.importance_level || '低'}
+            <span class="badge-dot"></span>${formatScore(article.importance_score)}
           </span>
           <span class="card-meta-dot">·</span>
           <span>${escHtml(article.source_name || '')}</span>

@@ -39,7 +39,6 @@ export function renderUserScreen() {
         ${ICONS.newspaper}
       </div>
       <div class="user-screen-title">廿日市市ニュース</div>
-      <div class="user-screen-sub">廿日市商工会議所 地域情報ポータル</div>
     </div>
 
     <div class="user-grid" id="user-grid">

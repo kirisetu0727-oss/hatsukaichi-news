@@ -2,7 +2,7 @@
  * 記事詳細ロジック
  */
 import {
-  formatDate, formatRelativeTime, getImportanceClass,
+  formatDate, formatRelativeTime, getImportanceClassByScore, formatScore,
   ICONS, showToast
 } from './app.js';
 import { getCurrentUserId, isArticleSaved, saveArticle, unsaveArticle } from './storage.js';
@@ -24,7 +24,7 @@ export function renderDetail(articleId) {
     return;
   }
 
-  const cls = getImportanceClass(article.importance_level);
+  const cls = getImportanceClassByScore(article.importance_score);
   const userId = getCurrentUserId();
   const saved = userId ? isArticleSaved(userId, article.id) : false;
 
@@ -47,7 +47,7 @@ export function renderDetail(articleId) {
         <div class="detail-importance">
           <span class="badge badge-${cls}">
             <span class="badge-dot"></span>
-            重要度：${escHtml(article.importance_level || '低')}
+            重要度：${formatScore(article.importance_score)}
           </span>
         </div>
         ${article.importance_reason ? `<div class="detail-reason-box">「${escHtml(article.importance_reason)}」</div>` : ''}

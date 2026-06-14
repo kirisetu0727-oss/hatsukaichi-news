@@ -36,6 +36,16 @@ export function getImportanceClass(level) {
   return 'low';
 }
 
+export function getImportanceClassByScore(score) {
+  if (score >= 70) return 'high';
+  if (score >= 40) return 'mid';
+  return 'low';
+}
+
+export function formatScore(score) {
+  return score != null ? `${score}点` : '−';
+}
+
 export function getImportanceLabel(level) {
   return `重要度：${level || '低'}`;
 }
