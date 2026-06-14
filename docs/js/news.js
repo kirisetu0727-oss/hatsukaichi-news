@@ -44,18 +44,26 @@ export async function loadArticles() {
 
 // ===== Filter & Sort =====
 
+let currentSearch = '';
+
+export function setSearchQuery(q) { currentSearch = q; }
+
 export function applyFilters(searchQuery = '') {
+  currentSearch = searchQuery;
   let result = allArticles;
 
   if (currentCategory !== 'all') {
     result = result.filter(a => a.category === currentCategory);
   }
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
     result = result.filter(a =>
       a.title?.toLowerCase().includes(q) ||
       a.summary_short?.toLowerCase().includes(q) ||
-      a.source_name?.toLowerCase().includes(q)
+      a.summary_detail?.toLowerCase().includes(q) ||
+      a.source_name?.toLowerCase().includes(q) ||
+      (a.related_areas || []).join('').toLowerCase().includes(q) ||
+      (a.related_entities || []).join('').toLowerCase().includes(q)
     );
   }
 
@@ -99,14 +107,13 @@ function renderCard(article) {
   if (isHigh) {
     return `
     <article class="card" data-id="${article.id}" role="article" tabindex="0">
-      ${renderThumbnail(article, 'card-thumbnail', 'card-thumbnail-placeholder')}
+      ${renderThumbnail(article, 'card-thumbnail')}
       <div class="card-body">
         <div class="card-importance">
           <span class="badge badge-${cls}">
             <span class="badge-dot"></span>
             重要度：${article.importance_level || '低'}
           </span>
-          <span class="score-text">${article.importance_score || 0}点</span>
           ${article.category ? `<span class="category-chip">${categoryEmoji(article.category)} ${article.category}</span>` : ''}
         </div>
         <h2 class="card-title">${escHtml(article.title || '')}</h2>
@@ -148,13 +155,12 @@ function renderCard(article) {
   }
 }
 
-function renderThumbnail(article, imgClass, placeholderClass) {
+function renderThumbnail(article, imgClass) {
   if (article.thumbnail_url) {
     return `<img class="${imgClass}" src="${escAttr(article.thumbnail_url)}" alt="" loading="lazy"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="${placeholderClass}" style="display:none">${categoryEmoji(article.category)}</div>`;
+      onerror="this.style.display='none'">`;
   }
-  return `<div class="${placeholderClass}">${categoryEmoji(article.category)}</div>`;
+  return '';
 }
 
 function attachCardEvents(container) {
@@ -197,7 +203,7 @@ function attachCardEvents(container) {
 // ===== Category chips =====
 
 export function initFilters() {
-  const categories = ['すべて', '補助金', '出店', '閉店', '雇用', '観光', 'イベント', '行政', 'その他'];
+  const categories = ['すべて', '補助金', '企業', '店舗', '雇用', '観光', 'イベント', '行政', 'その他'];
   const bar = document.getElementById('category-chips');
   if (!bar) return;
 

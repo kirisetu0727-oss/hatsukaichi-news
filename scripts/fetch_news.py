@@ -18,6 +18,7 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 import google.generativeai as genai
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
@@ -167,6 +168,18 @@ def fetch_scrape(source: dict, keywords: dict) -> list[dict]:
     return articles
 
 
+def fetch_og_image(url: str) -> str:
+    try:
+        res = requests.get(url, timeout=3, headers=HEADERS, allow_redirects=True)
+        soup = BeautifulSoup(res.text, 'lxml')
+        og = soup.find('meta', property='og:image')
+        if og and og.get('content'):
+            return og['content']
+    except Exception:
+        pass
+    return ""
+
+
 def analyze_with_gemini(model, article: dict) -> dict:
     prompt = f"""あなたは廿日市市商工会議所の職員向けニュースアナリストです。
 以下の記事を分析し、必ずJSON形式のみで回答してください。
@@ -190,7 +203,7 @@ def analyze_with_gemini(model, article: dict) -> dict:
   "importance_score": 0から100の整数,
   "importance_level": "高または中または低",
   "importance_reason": "重要と判断した理由（1文・30字以内）",
-  "category": "補助金、出店、閉店、雇用、観光、イベント、行政、その他のいずれか",
+  "category": "補助金、企業、店舗、雇用、観光、イベント、行政、その他のいずれか",
   "related_areas": ["関係する地域名のリスト"],
   "related_entities": ["関係する企業・団体・店舗名のリスト"],
   "business_checkpoints": "業務上の確認ポイント（1文）"
@@ -275,6 +288,21 @@ def main():
 
     log.info(f"新規候補: {len(new_articles)}件")
     new_articles = new_articles[:MAX_ARTICLES_PER_RUN]
+
+    # サムネイルがない記事はOG画像を並列取得
+    no_thumb = [a for a in new_articles if not a.get("thumbnail_url")]
+    if no_thumb:
+        log.info(f"OG画像取得: {len(no_thumb)}件")
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = {executor.submit(fetch_og_image, a["url"]): a for a in no_thumb}
+            for future in as_completed(futures):
+                article = futures[future]
+                try:
+                    img = future.result()
+                    if img:
+                        article["thumbnail_url"] = img
+                except Exception:
+                    pass
 
     analyzed = []
     for i, art in enumerate(new_articles):

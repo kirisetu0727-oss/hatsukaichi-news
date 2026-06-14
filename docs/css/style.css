@@ -3,25 +3,25 @@
 
 /* ===== CSS Variables ===== */
 :root {
-  --color-primary:       #C0392B;
-  --color-primary-soft:  #F5E6E4;
-  --color-primary-dark:  #96281B;
-  --color-accent:        #1A6B8A;
-  --color-accent-soft:   #E3F0F4;
+  --color-primary:       #1A5FAE;
+  --color-primary-soft:  #E8F0FB;
+  --color-primary-dark:  #144A8A;
+  --color-accent:        #2E8B77;
+  --color-accent-soft:   #E3F4F1;
 
-  --color-high:   #E53E3E;
-  --color-high-bg: #FFF5F5;
-  --color-mid:    #D97706;
-  --color-mid-bg: #FFFBEB;
+  --color-high:   #C0392B;
+  --color-high-bg: #FDF0EE;
+  --color-mid:    #C07A00;
+  --color-mid-bg: #FEF8EC;
   --color-low:    #6B7280;
-  --color-low-bg: #F9FAFB;
+  --color-low-bg: #F4F6F9;
 
-  --color-bg:       #F8F7F5;
+  --color-bg:       #F4F6F9;
   --color-surface:  #FFFFFF;
-  --color-border:   #E5E3DF;
-  --color-text-primary:   #1A1A1A;
-  --color-text-secondary: #6B7280;
-  --color-text-muted:     #9CA3AF;
+  --color-border:   #DDE3ED;
+  --color-text-primary:   #1E2D40;
+  --color-text-secondary: #5A6A80;
+  --color-text-muted:     #8A9AB0;
 
   --font-serif: 'Noto Serif JP', 'Georgia', serif;
   --font-sans:  'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
@@ -139,20 +139,23 @@ ul { list-style: none; }
 }
 .header-btn:hover { background: var(--color-bg); color: var(--color-text-primary); }
 .header-btn svg { width: 22px; height: 22px; }
+#user-switch-btn {
+  width: auto;
+  padding: 4px;
+}
 .header-user-chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  justify-content: center;
+  flex-shrink: 0;
 }
 .header-meta {
   padding: 6px 16px;
@@ -170,10 +173,11 @@ ul { list-style: none; }
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   width: 100%;
   max-width: var(--max-width);
+  margin: 0 auto;
   z-index: 100;
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
@@ -301,14 +305,7 @@ ul { list-style: none; }
   background: var(--color-bg);
 }
 .card-thumbnail-placeholder {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: linear-gradient(135deg, var(--color-primary-soft) 0%, var(--color-accent-soft) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  color: var(--color-primary);
+  display: none;
 }
 
 .card-body { padding: 14px 16px 12px; }
@@ -335,11 +332,6 @@ ul { list-style: none; }
   width: 6px; height: 6px;
   border-radius: 50%;
   background: currentColor;
-}
-.score-text {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  font-weight: 500;
 }
 .category-chip {
   margin-left: auto;
@@ -592,11 +584,7 @@ ul { list-style: none; }
   background: var(--color-bg);
 }
 .detail-thumbnail-placeholder {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-accent-soft));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 48px;
+  display: none;
 }
 .detail-body { padding: 20px 16px; }
 .detail-importance {
@@ -677,6 +665,13 @@ ul { list-style: none; }
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.detail-tag:hover {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 .checkpoint-box {
   background: var(--color-accent-soft);
@@ -1153,7 +1148,7 @@ ul { list-style: none; }
 
 /* ===== PC Wide ===== */
 @media (min-width: 640px) {
-  .bottom-nav { position: sticky; bottom: 0; transform: none; left: 0; }
+  .bottom-nav { position: sticky; bottom: 0; }
   .app-container { display: flex; flex-direction: column; }
   .page { flex: 1; }
   .detail-save-bar { position: static; width: 100%; margin: 16px; width: auto; }

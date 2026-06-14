@@ -2,7 +2,7 @@
  * アプリ エントリーポイント
  */
 import { renderUserScreen } from './user.js';
-import { loadArticles, initFilters, applyFilters } from './news.js';
+import { loadArticles, initFilters, applyFilters, setSearchQuery } from './news.js';
 import { initSavedPage } from './saved.js';
 import { initAdminPage } from './admin.js';
 import { getCurrentUserId, getCurrentUser } from './storage.js';
@@ -95,6 +95,9 @@ document.addEventListener('navigate', async e => {
     const mainApp = document.getElementById('main-app');
     if (!mainApp || mainApp.style.display === 'none') {
       showMainApp(getCurrentUserId());
+    } else if (e.detail.filterTag) {
+      navigateTo('news');
+      applyFilters(e.detail.filterTag);
     } else {
       navigateTo('news');
     }
@@ -106,7 +109,13 @@ document.addEventListener('navigate', async e => {
 function updateHeaderUser() {
   const user = getCurrentUser();
   const el = document.getElementById('header-user-name');
-  if (el && user) el.textContent = user.name;
+  if (el && user) {
+    el.textContent = [...user.name][0] || '?';
+    const colors = ['#1A5FAE','#2E8B77','#27AE60','#8E44AD','#E67E22','#2980B9'];
+    let hash = 0;
+    for (const c of user.name) hash = c.charCodeAt(0) + ((hash << 5) - hash);
+    el.style.background = colors[Math.abs(hash) % colors.length];
+  }
 }
 
 document.getElementById('user-switch-btn')?.addEventListener('click', () => {

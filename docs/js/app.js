@@ -147,8 +147,9 @@ export function renderEmpty(container, { title, message, retryFn }) {
 
 export function categoryEmoji(cat) {
   const map = {
-    '補助金': '💰', '出店': '🏪', '閉店': '🚪', '雇用': '👥',
-    '観光': '⛩️', 'イベント': '🎉', '行政': '🏛️', 'その他': '📰'
+    '補助金': '💰', '企業': '🏢', '店舗': '🏪', '雇用': '👥',
+    '観光': '⛩️', 'イベント': '🎉', '行政': '🏛️', 'その他': '📰',
+    '出店': '🏪', '閉店': '🚪'
   };
   return map[cat] || '📰';
 }

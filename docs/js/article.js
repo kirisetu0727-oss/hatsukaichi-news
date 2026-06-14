@@ -30,12 +30,11 @@ export function renderDetail(articleId) {
 
   const thumbnail = article.thumbnail_url
     ? `<img class="detail-thumbnail" src="${escHtml(article.thumbnail_url)}" alt="" loading="lazy"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-       <div class="detail-thumbnail-placeholder" style="display:none">${categoryEmoji(article.category)}</div>`
-    : `<div class="detail-thumbnail-placeholder">${categoryEmoji(article.category)}</div>`;
+        onerror="this.style.display='none'">`
+    : '';
 
-  const areas = (article.related_areas || []).map(a => `<span class="detail-tag">📍 ${escHtml(a)}</span>`).join('');
-  const entities = (article.related_entities || []).map(e => `<span class="detail-tag">🏢 ${escHtml(e)}</span>`).join('');
+  const areas = (article.related_areas || []).map(a => `<span class="detail-tag" data-filter="${escHtml(a)}">📍 ${escHtml(a)}</span>`).join('');
+  const entities = (article.related_entities || []).map(e => `<span class="detail-tag" data-filter="${escHtml(e)}">🏢 ${escHtml(e)}</span>`).join('');
 
   container.innerHTML = `
     <div class="detail-header">
@@ -50,7 +49,6 @@ export function renderDetail(articleId) {
             <span class="badge-dot"></span>
             重要度：${escHtml(article.importance_level || '低')}
           </span>
-          <span class="score-text">${article.importance_score || 0}点</span>
           ${article.category ? `<span class="category-chip">${categoryEmoji(article.category)} ${article.category}</span>` : ''}
         </div>
         ${article.importance_reason ? `<div class="detail-reason-box">「${escHtml(article.importance_reason)}」</div>` : ''}
@@ -82,11 +80,6 @@ export function renderDetail(articleId) {
           </div>
         </div>` : ''}
 
-        ${article.business_checkpoints ? `
-        <div class="detail-section">
-          <div class="detail-section-label">業務上の確認ポイント</div>
-          <div class="checkpoint-box">${escHtml(article.business_checkpoints)}</div>
-        </div>` : ''}
 
         <a class="detail-link-btn" href="${escHtml(article.url || '#')}" target="_blank" rel="noopener noreferrer">
           元記事を読む ${ICONS.external}
@@ -102,6 +95,13 @@ export function renderDetail(articleId) {
 
   document.getElementById('detail-back')?.addEventListener('click', () => {
     document.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'news' } }));
+  });
+
+  container.querySelectorAll('.detail-tag[data-filter]').forEach(tag => {
+    tag.addEventListener('click', () => {
+      const keyword = tag.dataset.filter;
+      document.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'news', filterTag: keyword } }));
+    });
   });
 
   const saveBtn = document.getElementById('detail-save-btn');
