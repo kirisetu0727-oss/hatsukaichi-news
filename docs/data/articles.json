@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-18T15:29:48.157384+09:00",
+  "updated_at": "2026-07-18T18:40:41.483706+09:00",
   "total": 237,
   "articles": [
     {
@@ -21,26 +21,6 @@
       "related_entities": [],
       "business_checkpoints": "元記事を直接確認してください",
       "fetched_at": "2026-06-18T20:57:21.037654+09:00"
-    },
-    {
-      "title": "廿日市市上平良で熊目撃情報 山陽自動車道宮島サービスエリア西側 - 47NEWS",
-      "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBQUDhFbDk3Rk1OU05OeDZBT00zNjlqTTJ6aWEzWURPUnV2VmhFS3VGd3NmSzBMTDdQTHZJM1dSVmh0NHBzX280SzNySQ?oc=5",
-      "canonical_url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBQUDhFbDk3Rk1OU05OeDZBT00zNjlqTTJ6aWEzWURPUnV2VmhFS3VGd3NmSzBMTDdQTHZJM1dSVmh0NHBzX280SzNySQ",
-      "source_name": "Google ニュース（廿日市市）",
-      "source_reliability": "高",
-      "published_at": "2026-06-18T18:04:00+09:00",
-      "thumbnail_url": "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=s0-w300",
-      "raw_summary": "廿日市市上平良で熊目撃情報 山陽自動車道宮島サービスエリア西側&nbsp;&nbsp;47NEWS",
-      "id": "7f2d290dcc08c01c",
-      "summary_short": "廿日市市上平良で熊目撃情報 山陽自動車道宮島サービスエリア西側&nbsp;&nbsp;47NEWS",
-      "summary_detail": "廿日市市上平良で熊目撃情報 山陽自動車道宮島サービスエリア西側&nbsp;&nbsp;47NEWS",
-      "importance_score": 30,
-      "importance_level": "低",
-      "importance_reason": "",
-      "related_areas": [],
-      "related_entities": [],
-      "business_checkpoints": "元記事を直接確認してください",
-      "fetched_at": "2026-06-18T20:57:36.594785+09:00"
     },
     {
       "title": "（広島）廿日市市上平良でクマ出没の可能性　６月１８日 - ｄメニューニュース",
@@ -4741,6 +4721,26 @@
       "related_entities": [],
       "business_checkpoints": "元記事を直接確認してください",
       "fetched_at": "2026-07-18T15:29:47.657214+09:00"
+    },
+    {
+      "title": "【広島県廿日市】ヒルトン運営のラグジュアリーホテルが宮島口に2028年開業予定！広島県に初進出 - STRAIGHT PRESS",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5KVWwxdE9XT2VlSzFLTXc1SjZDS0xKUmZpcEtnOTN1MUxkejQxbkcxT1BTOTdGLXJIdnpQS2FMRjMtZFQycFhPa3VqaFVUbkJHWTdz?oc=5",
+      "canonical_url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5KVWwxdE9XT2VlSzFLTXc1SjZDS0xKUmZpcEtnOTN1MUxkejQxbkcxT1BTOTdGLXJIdnpQS2FMRjMtZFQycFhPa3VqaFVUbkJHWTdz",
+      "source_name": "Google ニュース（廿日市市）",
+      "source_reliability": "高",
+      "published_at": "2026-07-16T11:46:27+09:00",
+      "thumbnail_url": "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=s0-w300",
+      "raw_summary": "【広島県廿日市】ヒルトン運営のラグジュアリーホテルが宮島口に2028年開業予定！広島県に初進出&nbsp;&nbsp;STRAIGHT PRESS",
+      "id": "e3da5b6078820947",
+      "summary_short": "【広島県廿日市】ヒルトン運営のラグジュアリーホテルが宮島口に2028年開業予定！広島県に初進出&nbsp;&nbsp;STRAIGHT PRESS",
+      "summary_detail": "【広島県廿日市】ヒルトン運営のラグジュアリーホテルが宮島口に2028年開業予定！広島県に初進出&nbsp;&nbsp;STRAIGHT PRESS",
+      "importance_score": 30,
+      "importance_level": "低",
+      "importance_reason": "",
+      "related_areas": [],
+      "related_entities": [],
+      "business_checkpoints": "元記事を直接確認してください",
+      "fetched_at": "2026-07-18T18:40:40.983503+09:00"
     }
   ]
 }
